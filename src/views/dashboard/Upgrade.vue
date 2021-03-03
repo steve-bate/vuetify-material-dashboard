@@ -99,15 +99,6 @@
                     Current Version
                   </v-btn>
                 </td>
-                <td>
-                  <v-btn
-                    color="success"
-                    target="_blank"
-                    href="https://www.creative-tim.com/product/vuetify-material-dashboard-pro?ref=vtymd-upgrade-page"
-                  >
-                    Upgrade to Pro
-                  </v-btn>
-                </td>
               </tr>
             </tbody>
           </v-simple-table>
@@ -122,10 +113,3 @@
     name: 'DashboardDashboard',
   }
 </script>
-
-<style lang="sass">
-  #upgrade
-    .v-data-table
-      th, td
-        border: none !important
-</style>
