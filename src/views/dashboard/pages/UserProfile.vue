@@ -28,8 +28,8 @@
                   md="4"
                 >
                   <v-text-field
-                    label="Company (disabled)"
-                    disabled
+                    v-model="profile.company"
+                    label="Company"
                   />
                 </v-col>
 
@@ -38,6 +38,7 @@
                   md="4"
                 >
                   <v-text-field
+                    v-model="profile.username"
                     class="purple-input"
                     label="User Name"
                   />
@@ -48,6 +49,7 @@
                   md="4"
                 >
                   <v-text-field
+                    v-model="profile.email"
                     label="Email Address"
                     class="purple-input"
                   />
@@ -58,6 +60,7 @@
                   md="6"
                 >
                   <v-text-field
+                    v-model="profile.firstname"
                     label="First Name"
                     class="purple-input"
                   />
@@ -68,6 +71,7 @@
                   md="6"
                 >
                   <v-text-field
+                    v-model="profile.lastname"
                     label="Last Name"
                     class="purple-input"
                   />
@@ -75,7 +79,8 @@
 
                 <v-col cols="12">
                   <v-text-field
-                    label="Adress"
+                    v-model="profile.address"
+                    label="Address"
                     class="purple-input"
                   />
                 </v-col>
@@ -85,6 +90,7 @@
                   md="4"
                 >
                   <v-text-field
+                    v-model="profile.city"
                     label="City"
                     class="purple-input"
                   />
@@ -95,6 +101,7 @@
                   md="4"
                 >
                   <v-text-field
+                    v-model="profile.country"
                     label="Country"
                     class="purple-input"
                   />
@@ -105,6 +112,7 @@
                   md="4"
                 >
                   <v-text-field
+                    v-model="profile.postalcode"
                     class="purple-input"
                     label="Postal Code"
                     type="number"
@@ -113,6 +121,7 @@
 
                 <v-col cols="12">
                   <v-textarea
+                    v-model="profile.about"
                     class="purple-input"
                     label="About Me"
                     value="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
@@ -126,6 +135,7 @@
                   <v-btn
                     color="success"
                     class="mr-0"
+                    @click.stop="updateProfile"
                   >
                     Update Profile
                   </v-btn>
@@ -142,25 +152,26 @@
       >
         <base-material-card
           class="v-card-profile"
-          avatar="https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg"
+          :avatar="profile.avatar"
         >
           <v-card-text class="text-center">
             <h6 class="text-h4 mb-1 grey--text">
-              CEO / CO-FOUNDER
+              {{ profile.companyRole }}
             </h6>
 
             <h4 class="text-h3 font-weight-light mb-3 black--text">
-              Alec Thompson
+              {{ profile.firstname }} {{ profile.lastname }}
             </h4>
 
             <p class="font-weight-light grey--text">
-              Don't be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
+              {{ profile.favoriteQuote }}
             </p>
 
             <v-btn
               color="success"
               rounded
               class="mr-0"
+              @click="followUser"
             >
               Follow
             </v-btn>
@@ -172,7 +183,27 @@
 </template>
 
 <script>
+  import profileApi from '../../../api/UserProfileApi'
+
   export default {
-    //
+    data () {
+      return {
+        profile: {},
+      }
+    },
+    async mounted () {
+      this.profile = await this.getProfile('test')
+    },
+    methods: {
+      async getProfile (username) {
+        return await profileApi.getProfile(username)
+      },
+      async updateProfile () {
+        await profileApi.updateProfile(this.profile)
+      },
+      async followUser () {
+        await profileApi.followUser(this.profile.username)
+      },
+    },
   }
 </script>
