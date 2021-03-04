@@ -83,7 +83,7 @@
             bordered
           >
             <template v-slot:badge>
-              <span>5</span>
+              <span>{{ notifications.length }}</span>
             </template>
 
             <v-icon>mdi-bell</v-icon>
@@ -162,11 +162,12 @@
 
     data: () => ({
       notifications: [
-        'Mike John Responded to your email',
+        'Mike John Responded to your email, dude!',
         'You have 5 new tasks',
         'You\'re now friends with Andrew',
         'Another Notification',
         'Another one',
+        'Yes another',
       ],
     }),
 
