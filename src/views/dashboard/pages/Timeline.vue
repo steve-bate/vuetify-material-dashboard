@@ -50,7 +50,7 @@
                   right
                   transition="scale-transition"
                 >
-                  <template v-slot:activator="{ attrs, on }">
+                  <template #activator="{ attrs, on }">
                     <v-btn
                       v-bind="attrs"
                       :color="timeline.action"

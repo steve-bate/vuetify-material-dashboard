@@ -38,7 +38,7 @@
     >
       <template
         v-if="$vuetify.breakpoint.mdAndUp"
-        v-slot:append-outer
+        #append-outer
       >
         <v-btn
           class="mt-n2"
@@ -69,7 +69,7 @@
       origin="top right"
       transition="scale-transition"
     >
-      <template v-slot:activator="{ attrs, on }">
+      <template #activator="{ attrs, on }">
         <v-btn
           class="ml-2"
           min-width="0"
@@ -82,7 +82,7 @@
             overlap
             bordered
           >
-            <template v-slot:badge>
+            <template #badge>
               <span>{{ notifications.length }}</span>
             </template>
 

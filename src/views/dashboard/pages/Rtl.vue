@@ -28,7 +28,7 @@
         md="6"
       >
         <base-material-card>
-          <template v-slot:heading>
+          <template #heading>
             <v-tabs
               v-model="tabs"
               background-color="transparent"
@@ -187,7 +187,7 @@
                   right
                   transition="scale-transition"
                 >
-                  <template v-slot:activator="{ attrs, on }">
+                  <template #activator="{ attrs, on }">
                     <v-btn
                       v-bind="attrs"
                       :color="timeline.action"

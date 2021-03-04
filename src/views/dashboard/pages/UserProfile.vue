@@ -10,7 +10,7 @@
         md="8"
       >
         <base-material-card>
-          <template v-slot:heading>
+          <template #heading>
             <div class="text-h3 font-weight-light">
               Edit Profile
             </div>

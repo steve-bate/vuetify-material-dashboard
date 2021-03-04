@@ -17,9 +17,9 @@
           hover-reveal
           type="Bar"
         >
-          <template v-slot:reveal-actions>
+          <template #reveal-actions>
             <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
+              <template #activator="{ attrs, on }">
                 <v-btn
                   v-bind="attrs"
                   color="info"
@@ -38,7 +38,7 @@
             </v-tooltip>
 
             <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
+              <template #activator="{ attrs, on }">
                 <v-btn
                   v-bind="attrs"
                   light
@@ -61,7 +61,7 @@
             Last Campaign Performance
           </p>
 
-          <template v-slot:actions>
+          <template #actions>
             <v-icon
               class="mr-1"
               small
@@ -84,9 +84,9 @@
           hover-reveal
           type="Line"
         >
-          <template v-slot:reveal-actions>
+          <template #reveal-actions>
             <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
+              <template #activator="{ attrs, on }">
                 <v-btn
                   v-bind="attrs"
                   color="info"
@@ -105,7 +105,7 @@
             </v-tooltip>
 
             <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
+              <template #activator="{ attrs, on }">
                 <v-btn
                   v-bind="attrs"
                   light
@@ -135,7 +135,7 @@
             increase in today's sales
           </p>
 
-          <template v-slot:actions>
+          <template #actions>
             <v-icon
               class="mr-1"
               small
@@ -158,9 +158,9 @@
           color="info"
           type="Line"
         >
-          <template v-slot:reveal-actions>
+          <template #reveal-actions>
             <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
+              <template #activator="{ attrs, on }">
                 <v-btn
                   v-bind="attrs"
                   color="info"
@@ -179,7 +179,7 @@
             </v-tooltip>
 
             <v-tooltip bottom>
-              <template v-slot:activator="{ attrs, on }">
+              <template #activator="{ attrs, on }">
                 <v-btn
                   v-bind="attrs"
                   light
@@ -202,7 +202,7 @@
             Last Last Campaign Performance
           </p>
 
-          <template v-slot:actions>
+          <template #actions>
             <v-icon
               class="mr-1"
               small
@@ -283,7 +283,7 @@
           color="warning"
           class="px-5 py-3"
         >
-          <template v-slot:heading>
+          <template #heading>
             <div class="text-h3 font-weight-light">
               Employees Stats
             </div>
@@ -306,7 +306,7 @@
         md="6"
       >
         <base-material-card class="px-5 py-3">
-          <template v-slot:heading>
+          <template #heading>
             <v-tabs
               v-model="tabs"
               background-color="transparent"
