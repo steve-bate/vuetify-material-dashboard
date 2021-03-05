@@ -8,6 +8,11 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
+      name: 'Login',
+      path: '/login',
+      component: () => import('@/views/dashboard/pages/Login'),
+    },
+    {
       path: '/',
       component: () => import('@/views/dashboard/Index'),
       children: [
@@ -22,6 +27,11 @@ export default new Router({
           name: 'User Profile',
           path: 'pages/user',
           component: () => import('@/views/dashboard/pages/UserProfile'),
+        },
+        {
+          name: 'Timeline',
+          path: 'pages/timeline',
+          component: () => import('@/views/dashboard/pages/Timeline'),
         },
         // Tables
         {

@@ -107,6 +107,11 @@
           to: '/pages/user',
         },
         {
+          icon: 'mdi-clock',
+          title: 'timeline',
+          to: '/pages/timeline',
+        },
+        {
           title: 'rtables',
           icon: 'mdi-clipboard-outline',
           to: '/tables/regular-tables',
