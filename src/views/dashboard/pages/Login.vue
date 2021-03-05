@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-main>
+    <v-main id="login">
       <div class="l-auth">
         <v-form
           v-model="validLogin"
@@ -45,7 +45,6 @@
           >
             Create account
           </v-btn>
-
         </v-form>
       </div>
 
@@ -53,6 +52,18 @@
         v-if="signUpVisible"
         class="l-signup"
       >
+        <v-row>
+          <v-spacer />
+          <v-btn
+            icon
+            text
+            color="light-blue lighten-1"
+            @click.native="signUpVisible = false"
+          >
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-row>
+
         <v-form
           v-model="validSignUp"
         >
@@ -62,6 +73,7 @@
             prepend-icon="mdi-account"
             :rules="rules"
             required
+            dark
             color="light-blue lighten-1"
           />
 
@@ -70,11 +82,13 @@
             label="Password"
             prepend-icon="mdi-lock"
             :rules="rules"
-            :append-icon="signUpPasswordVisible ? 'mdi-flashlight' : 'mdi-flashlight-off'"
-            :append-icon-cb="() => (signUpPasswordVisible = !signUpPasswordVisible)"
+            :append-outer-icon="signUpPasswordVisible ? 'mdi-flashlight' : 'mdi-flashlight-off'"
             :type="signUpPasswordVisible ? 'text' : 'password'"
+            dark
             color="light-blue lighten-1"
             required
+            autocomplete
+            @click:append-outer="() => (signUpPasswordVisible = !signUpPasswordVisible)"
           />
 
           <v-btn
@@ -126,8 +140,16 @@
     methods: {
       submitAuthentication () {
         console.log(`submitAuthentication: user=${this.credentials.username}, pass=${this.credentials.password}`)
+        if (this.credentials.username === 'steve') {
+          this.$router.push('/')
+          return
+        }
+
         this.message = 'Authentication Failed'
         this.snackbar = true
+      },
+      submitSignUp () {
+        console.log(`submitSignUp: user=${this.newUser.username}, pass=${this.newUser.password}`)
       },
     },
   }
@@ -138,13 +160,13 @@
 
 .l-auth {
   background-color: $background-tint;
-  //background-color: white;
   padding: 15px;
   margin: 45px auto;
   min-width: 272px;
   max-width: 320px;
   animation: bounceIn 1s forwards ease;
   z-index: 100;
+  border-radius: 8px;
 }
 
 .l-signup {
@@ -154,6 +176,7 @@
   min-width: 272px;
   max-width: 320px;
   animation: slideInFromLeft 1s forwards ease;
+  border-radius: 8px;
 }
 
 .login__snackbar {
@@ -165,7 +188,7 @@
   }
 }
 
-.v-main {
+#login {
   font-family: Roboto,Helvetica,Arial,sans-serif;
   background:
     linear-gradient(
@@ -174,17 +197,5 @@
     ),
     url('../../../assets/login.jpg')
     no-repeat center center fixed;
-
-  // &::after {
-  //   content: '';
-  //   position: fixed;
-  //   width: 100%;
-  //   height: 100%;
-  //   top: 0;
-  //   left: 0;
-  //   background-color: $background-tint;
-  //   opacity: .3;
-  //   z-index: 1;
-  // }
 }
 </style>
