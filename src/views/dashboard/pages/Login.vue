@@ -2,14 +2,17 @@
   <v-app>
     <v-main>
       <div class="l-auth">
-        <v-form v-model="validLogin">
+        <v-form
+          v-model="validLogin"
+        >
           <v-text-field
             v-model="credentials.username"
             label="Username"
             prepend-icon="mdi-account"
             :rules="rules"
             required
-            color="light-blue lighten-"
+            dark
+            color="light-blue lighten-1"
           />
 
           <v-text-field
@@ -19,6 +22,7 @@
             :rules="rules"
             :append-outer-icon="loginPasswordVisible ? 'mdi-flashlight' : 'mdi-flashlight-off'"
             :type="loginPasswordVisible ? 'text' : 'password'"
+            dark
             color="light-blue lighten-1"
             required
             autocomplete
@@ -27,7 +31,6 @@
 
           <v-btn
             block
-            rounded
             color="light-blue lighten-1"
             @click.native="submitAuthentication()"
           >
@@ -36,9 +39,8 @@
 
           <v-btn
             block
-            rounded
             text
-            style="color: lightgray"
+            color="light-blue lighten-1"
             @click.native="signUpVisible = true"
           >
             Create account
@@ -89,8 +91,10 @@
         v-model="snackbar"
         timeout="6000"
         bottom="bottom"
-        color="red lighten-1"
+        color="error"
+        content-class="login__snackbar"
       >
+        <v-icon>mdi-alert</v-icon>
         {{ message }}
       </v-snackbar>
     </v-main>
@@ -122,6 +126,8 @@
     methods: {
       submitAuthentication () {
         console.log(`submitAuthentication: user=${this.credentials.username}, pass=${this.credentials.password}`)
+        this.message = 'Authentication Failed'
+        this.snackbar = true
       },
     },
   }
@@ -132,11 +138,13 @@
 
 .l-auth {
   background-color: $background-tint;
+  //background-color: white;
   padding: 15px;
   margin: 45px auto;
   min-width: 272px;
   max-width: 320px;
   animation: bounceIn 1s forwards ease;
+  z-index: 100;
 }
 
 .l-signup {
@@ -148,21 +156,35 @@
   animation: slideInFromLeft 1s forwards ease;
 }
 
-.v-main {
-  font-family: helvetica;
+.login__snackbar {
+  text-align: center;
+  font-size: 1rem;
 
-  background: url('../../../assets/login.jpg') no-repeat center center fixed;
-
-  &::after {
-    content: '';
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background-color: $background-tint;
-    opacity: .3;
-    z-index: 1;
+  i {
+    margin-right: 0.5rem;
   }
+}
+
+.v-main {
+  font-family: Roboto,Helvetica,Arial,sans-serif;
+  background:
+    linear-gradient(
+      rgba(0, 0, 0, 0.8),
+      rgba($background-tint, 0.1)
+    ),
+    url('../../../assets/login.jpg')
+    no-repeat center center fixed;
+
+  // &::after {
+  //   content: '';
+  //   position: fixed;
+  //   width: 100%;
+  //   height: 100%;
+  //   top: 0;
+  //   left: 0;
+  //   background-color: $background-tint;
+  //   opacity: .3;
+  //   z-index: 1;
+  // }
 }
 </style>
