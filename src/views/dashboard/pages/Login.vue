@@ -3,7 +3,7 @@
     <v-main id="login">
       <div class="l-auth">
         <v-form
-          v-model="validLogin"
+          v-model="loginDataIsValid"
         >
           <v-text-field
             v-model="credentials.username"
@@ -65,7 +65,7 @@
         </v-row>
 
         <v-form
-          v-model="validSignUp"
+          v-model="signupDataIsValid"
         >
           <v-text-field
             v-model="newUser.username"
@@ -116,37 +116,67 @@
 </template>
 
 <script>
+  import { mapActions } from 'vuex'
+
   export default {
     data () {
       return {
-        snackbar: false,
-        validLogin: false,
-        validSignUp: false,
-        signUpVisible: false,
+        loginDataIsValid: false,
         loginPasswordVisible: false,
-        signUpPasswordVisible: false,
-        rules: [(value) => !!value || 'This field is required'],
         credentials: {
           username: '',
           password: '',
         },
+        signupDataIsValid: false,
+        signUpVisible: false,
+        signUpPasswordVisible: false,
         newUser: {
           username: '',
           password: '',
         },
+        rules: [(value) => !!value || 'This field is required'],
+        snackbar: false,
         message: '',
       }
     },
     methods: {
-      submitAuthentication () {
-        console.log(`submitAuthentication: user=${this.credentials.username}, pass=${this.credentials.password}`)
-        if (this.credentials.username === 'steve') {
-          this.$router.push('/')
+      ...mapActions({ authenticate: 'auth/authenticate' }),
+
+      logObject (o, indent = '', depth = 1) {
+        for (const [key, value] of Object.entries(o)) {
+          //   if (key[0] === '_' || key[0] === '$') {
+          //     continue
+          //   }
+          //   if (depth <= 2 && typeof o !== 'function' && typeof o === 'object' && o !== null) {
+          //     console.log(`${indent}${key} (${typeof o}) {`)
+          //     this.logObject(o, indent + '  ', depth + 1)
+          //     console.log(`${indent}}`)
+          //     continue
+          //   }
+          console.log(`${indent}${key}`, value || 'null')
+          if (key === 'credentials' || key === 'newUser') {
+            this.logObject(value, indent + '  ')
+          }
+        }
+      },
+      snack (message) {
+        this.message = message
+        this.snackbar = true
+      },
+      async submitAuthentication () {
+        if (!this.loginDataIsValid) {
+          this.snack('Invalid login data')
           return
         }
 
-        this.message = 'Authentication Failed'
-        this.snackbar = true
+        console.log('submitAuthentication', this.credentials.username, this.credentials.password)
+
+        try {
+          await this.authenticate(this.credentials)
+          this.$router.push('/')
+        } catch (error) {
+          this.snack(error)
+        }
       },
       submitSignUp () {
         console.log(`submitSignUp: user=${this.newUser.username}, pass=${this.newUser.password}`)
@@ -181,7 +211,7 @@
 
 .login__snackbar {
   text-align: center;
-  font-size: 1rem;
+  font-size: 1rem;n
 
   i {
     margin-right: 0.5rem;
@@ -189,7 +219,7 @@
 }
 
 #login {
-  font-family: Roboto,Helvetica,Arial,sans-serif;
+  font-family: Roboto,Helvetica,Arial,sanns-serif;
   background:
     linear-gradient(
       rgba(0, 0, 0, 0.8),
