@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import authModule from './modules/auth'
+import configModule from './modules/config'
 
 Vue.use(Vuex)
 
@@ -25,5 +26,6 @@ export default new Vuex.Store({
 
   modules: {
     auth: authModule,
+    config: configModule,
   },
 })

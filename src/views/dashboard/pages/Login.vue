@@ -141,24 +141,6 @@
     },
     methods: {
       ...mapActions({ authenticate: 'auth/authenticate' }),
-
-      logObject (o, indent = '', depth = 1) {
-        for (const [key, value] of Object.entries(o)) {
-          //   if (key[0] === '_' || key[0] === '$') {
-          //     continue
-          //   }
-          //   if (depth <= 2 && typeof o !== 'function' && typeof o === 'object' && o !== null) {
-          //     console.log(`${indent}${key} (${typeof o}) {`)
-          //     this.logObject(o, indent + '  ', depth + 1)
-          //     console.log(`${indent}}`)
-          //     continue
-          //   }
-          console.log(`${indent}${key}`, value || 'null')
-          if (key === 'credentials' || key === 'newUser') {
-            this.logObject(value, indent + '  ')
-          }
-        }
-      },
       snack (message) {
         this.message = message
         this.snackbar = true
@@ -168,9 +150,7 @@
           this.snack('Invalid login data')
           return
         }
-
         console.log('submitAuthentication', this.credentials.username, this.credentials.password)
-
         try {
           await this.authenticate(this.credentials)
           this.$router.push('/')

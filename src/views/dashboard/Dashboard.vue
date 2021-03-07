@@ -7,6 +7,68 @@
     <v-row>
       <v-col
         cols="12"
+        sm="6"
+        lg="3"
+      >
+        <base-material-stats-card
+          color="info"
+          icon="mdi-temperature-fahrenheit"
+          title="Temperature"
+          :value="weather.main.temp + '°'"
+          sub-icon="mdi-clock"
+          :sub-text="updatedWhen"
+        />
+      </v-col>
+
+      <v-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
+        <base-material-stats-card
+          color="primary"
+          icon="mdi-water"
+          title="Humidity"
+          :value="weather.main.humidity + '%'"
+          sub-icon="mdi-clock"
+          :sub-text="updatedWhen"
+        />
+      </v-col>
+
+      <v-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
+        <base-material-stats-card
+          color="success"
+          icon="mdi-airballoon"
+          title="Barometric Pressure"
+          :value="weather.main.pressure + ' mb'"
+          sub-icon="mdi-clock"
+          :sub-text="updatedWhen"
+        />
+      </v-col>
+
+      <v-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
+        <base-material-stats-card
+          color="orange"
+          icon="mdi-weather-windy"
+          title="Wind Speed"
+          :value="weather.wind.speed + ' mph'"
+          sub-icon="mdi-clock"
+          :sub-text="updatedWhen"
+        />
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col
+        cols="12"
         lg="4"
       >
         <base-material-chart-card
@@ -213,68 +275,9 @@
           </template>
         </base-material-chart-card>
       </v-col>
+    </v-row>
 
-      <v-col
-        cols="12"
-        sm="6"
-        lg="3"
-      >
-        <base-material-stats-card
-          color="info"
-          icon="mdi-twitter"
-          title="Followers"
-          value="+245"
-          sub-icon="mdi-clock"
-          sub-text="Just Updated"
-        />
-      </v-col>
-
-      <v-col
-        cols="12"
-        sm="6"
-        lg="3"
-      >
-        <base-material-stats-card
-          color="primary"
-          icon="mdi-poll"
-          title="Website Visits"
-          value="75.521"
-          sub-icon="mdi-tag"
-          sub-text="Tracked from Google Analytics"
-        />
-      </v-col>
-
-      <v-col
-        cols="12"
-        sm="6"
-        lg="3"
-      >
-        <base-material-stats-card
-          color="success"
-          icon="mdi-store"
-          title="Revenue"
-          value="$ 34,245"
-          sub-icon="mdi-calendar"
-          sub-text="Last 24 Hours"
-        />
-      </v-col>
-
-      <v-col
-        cols="12"
-        sm="6"
-        lg="3"
-      >
-        <base-material-stats-card
-          color="orange"
-          icon="mdi-sofa"
-          title="Bookings"
-          value="184"
-          sub-icon="mdi-alert"
-          sub-icon-color="red"
-          sub-text="Get More Space..."
-        />
-      </v-col>
-
+    <v-row>
       <v-col
         cols="12"
         md="6"
@@ -393,11 +396,57 @@
 </template>
 
 <script>
+  import moment from 'moment'
+
   export default {
     name: 'DashboardDashboard',
 
     data () {
       return {
+        // TODO Connect to weather API
+        weather: {
+          coord: {
+            lon: -75.2342,
+            lat: 40.0118,
+          },
+          weather: [
+            {
+              id: 800,
+              main: 'Clear',
+              description: 'clear sky',
+              icon: '01d',
+            },
+          ],
+          base: 'stations',
+          main: {
+            temp: 40.71,
+            feels_like: 32.86,
+            temp_min: 37.99,
+            temp_max: 43,
+            pressure: 1026,
+            humidity: 38,
+          },
+          visibility: 10000,
+          wind: {
+            speed: 4.61,
+            deg: 320,
+          },
+          clouds: {
+            all: 1,
+          },
+          dt: 1615144181,
+          sys: {
+            type: 1,
+            id: 4743,
+            country: 'US',
+            sunrise: 1615116294,
+            sunset: 1615157949,
+          },
+          timezone: -18000,
+          id: 0,
+          name: 'Bala Cynwyd',
+          cod: 200,
+        },
         dailySalesChart: {
           data: {
             labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
@@ -590,6 +639,12 @@
           2: false,
         },
       }
+    },
+
+    computed: {
+      updatedWhen () {
+        return 'Updated at ' + moment(new Date(this.weather.dt * 1000)).format('YYYY-MM-DD hh:mm:ss A')
+      },
     },
 
     methods: {
