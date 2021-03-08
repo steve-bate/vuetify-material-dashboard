@@ -44,7 +44,8 @@
           color="success"
           icon="mdi-airballoon"
           title="Barometric Pressure"
-          :value="weather.main.pressure + ' mb'"
+          :value="String(weather.main.pressure)"
+          small-value="mb"
           sub-icon="mdi-clock"
           :sub-text="updatedWhen"
         />
@@ -59,7 +60,8 @@
           color="orange"
           icon="mdi-weather-windy"
           title="Wind Speed"
-          :value="weather.wind.speed + ' mph'"
+          :value="String(weather.wind.speed)"
+          small-value="mph"
           sub-icon="mdi-clock"
           :sub-text="updatedWhen"
         />
@@ -397,6 +399,7 @@
 
 <script>
   import moment from 'moment'
+  import weatherApi from '../../api/WeatherApi'
 
   export default {
     name: 'DashboardDashboard',
@@ -406,41 +409,18 @@
         // TODO Connect to weather API
         weather: {
           coord: {
-            lon: -75.2342,
-            lat: 40.0118,
           },
-          weather: [
-            {
-              id: 800,
-              main: 'Clear',
-              description: 'clear sky',
-              icon: '01d',
-            },
-          ],
+          weather: [],
           base: 'stations',
           main: {
-            temp: 40.71,
-            feels_like: 32.86,
-            temp_min: 37.99,
-            temp_max: 43,
-            pressure: 1026,
-            humidity: 38,
           },
           visibility: 10000,
           wind: {
-            speed: 4.61,
-            deg: 320,
           },
           clouds: {
-            all: 1,
           },
           dt: 1615144181,
           sys: {
-            type: 1,
-            id: 4743,
-            country: 'US',
-            sunrise: 1615116294,
-            sunset: 1615157949,
           },
           timezone: -18000,
           id: 0,
@@ -645,6 +625,10 @@
       updatedWhen () {
         return 'Updated at ' + moment(new Date(this.weather.dt * 1000)).format('YYYY-MM-DD hh:mm:ss A')
       },
+    },
+
+    async mounted () {
+      this.weather = await weatherApi.getWeatherData()
     },
 
     methods: {

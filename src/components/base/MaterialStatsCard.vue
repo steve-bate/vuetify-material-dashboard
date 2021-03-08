@@ -12,7 +12,16 @@
           v-text="title"
         />
 
-        <h3 class="text-h3 font-weight-light text--primary">
+        <v-progress-circular
+          v-if="value === undefined || value === null || value.includes('undefined')"
+          indeterminate
+          color="primary"
+        />
+
+        <h3
+          v-else
+          class="text-h3 font-weight-light text--primary"
+        >
           {{ value }} <small>{{ smallValue }}</small>
         </h3>
       </div>
