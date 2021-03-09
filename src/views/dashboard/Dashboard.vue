@@ -16,7 +16,7 @@
           title="Temperature"
           :value="weather.main.temp + '°'"
           sub-icon="mdi-clock"
-          :sub-text="updatedWhen"
+          :sub-text="updatedWhen(new Date(weather.dt * 1000))"
         />
       </v-col>
 
@@ -31,7 +31,7 @@
           title="Humidity"
           :value="weather.main.humidity + '%'"
           sub-icon="mdi-clock"
-          :sub-text="updatedWhen"
+          :sub-text="updatedWhen(new Date(weather.dt * 1000))"
         />
       </v-col>
 
@@ -47,7 +47,7 @@
           :value="String(weather.main.pressure)"
           small-value="mb"
           sub-icon="mdi-clock"
-          :sub-text="updatedWhen"
+          :sub-text="updatedWhen(new Date(weather.dt * 1000))"
         />
       </v-col>
 
@@ -63,7 +63,71 @@
           :value="String(weather.wind.speed)"
           small-value="mph"
           sub-icon="mdi-clock"
-          :sub-text="updatedWhen"
+          :sub-text="updatedWhen(new Date(weather.dt * 1000))"
+        />
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
+        <base-material-stats-card
+          color="success"
+          icon="mdi-chart-line"
+          title="SP500"
+          :value="String(equityQuote('^SPX').regularMarketPreviousClose)"
+          sub-icon="mdi-clock"
+          :sub-text="updatedWhen(new Date())"
+        />
+      </v-col>
+
+      <v-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
+        <base-material-stats-card
+          color="#0000ff"
+          icon="mdi-chart-histogram"
+          title="Dow"
+          :value="String(equityQuote('^DJI').regularMarketPreviousClose)"
+          sub-icon="mdi-clock"
+          :sub-text="updatedWhen(new Date())"
+        />
+      </v-col>
+
+      <v-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
+        <base-material-stats-card
+          color="success"
+          icon="mdi-currency-eur"
+          title="EUR/USD"
+          :value="'$' + toFixed(parseFloat(forexQuote('EUR-USD').data['5. Exchange Rate']), 4)"
+          small-value=""
+          sub-icon="mdi-clock"
+          :sub-text="'Updated at ' + forexQuote('EUR-USD').data['6. Last Refreshed'] + ' UTC'"
+        />
+      </v-col>
+
+      <v-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
+        <base-material-stats-card
+          color="orange"
+          icon="mdi-currency-btc"
+          title="Bitcoin"
+          :value="'$' + toFixed(parseFloat(forexQuote('BTC-USD').data['5. Exchange Rate']), 0)"
+          small-value=""
+          sub-icon="mdi-clock"
+          :sub-text="'Updated at ' + forexQuote('BTC-USD').data['6. Last Refreshed'] + ' UTC'"
         />
       </v-col>
     </v-row>
@@ -400,6 +464,7 @@
 <script>
   import moment from 'moment'
   import weatherApi from '../../api/WeatherApi'
+  import marketDataApi from '../../api/MarketDataApi'
 
   export default {
     name: 'DashboardDashboard',
@@ -426,6 +491,12 @@
           id: 0,
           name: 'Bala Cynwyd',
           cod: 200,
+        },
+        equityQuotes: {
+        },
+        forexQuotes: {
+          'EUR-USD': { data: {} },
+          'BTC-USD': { data: {} },
         },
         dailySalesChart: {
           data: {
@@ -622,18 +693,34 @@
     },
 
     computed: {
-      updatedWhen () {
-        return 'Updated at ' + moment(new Date(this.weather.dt * 1000)).format('YYYY-MM-DD hh:mm:ss A')
-      },
     },
 
     async mounted () {
       this.weather = await weatherApi.getWeatherData()
+      this.equityQuotes = await marketDataApi.getStockQuotes(['^DJI', '^SPX'])
+      this.forexQuotes['EUR-USD'] = await marketDataApi.getForexQuote('EUR', 'USD')
+      this.forexQuotes['BTC-USD'] = await marketDataApi.getForexQuote('BTC', 'USD')
     },
 
     methods: {
       complete (index) {
         this.list[index] = !this.list[index]
+      },
+
+      updatedWhen (when) {
+        return 'Updated at ' + moment(when).format('YYYY-MM-DD hh:mm:ss A')
+      },
+
+      equityQuote (symbol) {
+        return this.equityQuotes[symbol] || {}
+      },
+
+      forexQuote (pair) {
+        return this.forexQuotes[pair] || {}
+      },
+
+      toFixed (value, precision) {
+        return value ? value.toFixed(precision) : value
       },
     },
   }
