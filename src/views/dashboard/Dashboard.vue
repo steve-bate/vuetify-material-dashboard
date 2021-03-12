@@ -354,18 +354,29 @@
         >
           <template #heading>
             <div class="text-h3 font-weight-light">
-              Employees Stats
+              Trending Topics
             </div>
 
             <div class="text-subtitle-1 font-weight-light">
-              New employees on 15th September, 2016
+              Bing Cognitive Search
             </div>
           </template>
           <v-card-text>
             <v-data-table
+              hide-default-header
               :headers="headers"
-              :items="items"
-            />
+              :items="newsItems"
+            >
+              <template #item.image="{ item }">
+                <img
+                  class="news-image"
+                  :src="item.image.url"
+                >
+              </template>
+              <template #item.name="{ item }">
+                <a :href="item.newsSearchUrl">{{ item.name }}</a><br>{{ item.query.text }}
+              </template>
+            </v-data-table>
           </v-card-text>
         </base-material-card>
       </v-col>
@@ -465,6 +476,7 @@
   import moment from 'moment'
   import weatherApi from '../../api/WeatherApi'
   import marketDataApi from '../../api/MarketDataApi'
+  import newsApi from '../../api/NewsApi'
 
   export default {
     name: 'DashboardDashboard',
@@ -575,69 +587,16 @@
         headers: [
           {
             sortable: false,
-            text: 'ID',
-            value: 'id',
+            text: 'Image',
+            value: 'image',
           },
           {
-            sortable: false,
+            sortable: true,
             text: 'Name',
             value: 'name',
           },
-          {
-            sortable: false,
-            text: 'Salary',
-            value: 'salary',
-            align: 'right',
-          },
-          {
-            sortable: false,
-            text: 'Country',
-            value: 'country',
-            align: 'right',
-          },
-          {
-            sortable: false,
-            text: 'City',
-            value: 'city',
-            align: 'right',
-          },
         ],
-        items: [
-          {
-            id: 1,
-            name: 'Dakota Rice',
-            country: 'Niger',
-            city: 'Oud-Tunrhout',
-            salary: '$35,738',
-          },
-          {
-            id: 2,
-            name: 'Minerva Hooper',
-            country: 'Curaçao',
-            city: 'Sinaai-Waas',
-            salary: '$23,738',
-          },
-          {
-            id: 3,
-            name: 'Sage Rodriguez',
-            country: 'Netherlands',
-            city: 'Overland Park',
-            salary: '$56,142',
-          },
-          {
-            id: 4,
-            name: 'Philip Chanley',
-            country: 'Korea, South',
-            city: 'Gloucester',
-            salary: '$38,735',
-          },
-          {
-            id: 5,
-            name: 'Doris Greene',
-            country: 'Malawi',
-            city: 'Feldkirchen in Kārnten',
-            salary: '$63,542',
-          },
+        newsItems: [
         ],
         tabs: 0,
         tasks: {
@@ -696,10 +655,12 @@
     },
 
     async mounted () {
+      // TODO run API queries concurrently
       this.weather = await weatherApi.getWeatherData()
       this.equityQuotes = await marketDataApi.getStockQuotes(['^DJI', '^SPX'])
       this.forexQuotes['EUR-USD'] = await marketDataApi.getForexQuote('EUR', 'USD')
       this.forexQuotes['BTC-USD'] = await marketDataApi.getForexQuote('BTC', 'USD')
+      this.newsItems = await newsApi.getTrendingTopics()
     },
 
     methods: {
@@ -725,3 +686,9 @@
     },
   }
 </script>
+
+<style scoped>
+.news-image {
+  width: 48px;
+}
+</style>
