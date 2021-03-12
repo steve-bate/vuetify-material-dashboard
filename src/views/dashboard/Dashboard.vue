@@ -365,7 +365,7 @@
             <v-data-table
               hide-default-header
               :headers="headers"
-              :items="newsItems"
+              :items="trendingTopics"
             >
               <template #item.image="{ item }">
                 <img
@@ -374,7 +374,10 @@
                 >
               </template>
               <template #item.name="{ item }">
-                <a :href="item.newsSearchUrl">{{ item.name }}</a><br>{{ item.query.text }}
+                <a
+                  :href="item.newsSearchUrl"
+                  target="_blank"
+                >{{ item.name }}</a><br>{{ item.query.text }}
               </template>
             </v-data-table>
           </v-card-text>
@@ -391,28 +394,29 @@
               v-model="tabs"
               background-color="transparent"
               slider-color="white"
+              @change="getNews()"
             >
               <span
                 class="subheading font-weight-light mx-3"
                 style="align-self: center"
-              >Tasks:</span>
+              >News:</span>
               <v-tab class="mr-3">
                 <v-icon class="mr-2">
-                  mdi-bug
+                  mdi-pharmacy
                 </v-icon>
-                Bugs
+                Health
               </v-tab>
               <v-tab class="mr-3">
                 <v-icon class="mr-2">
-                  mdi-code-tags
+                  mdi-account-multiple
                 </v-icon>
-                Website
+                Politics
               </v-tab>
               <v-tab>
                 <v-icon class="mr-2">
-                  mdi-cloud
+                  mdi-laptop
                 </v-icon>
-                Server
+                Technology
               </v-tab>
             </v-tabs>
           </template>
@@ -426,43 +430,32 @@
               :key="n"
             >
               <v-card-text>
-                <template v-for="(task, i) in tasks[tabs]">
+                <template v-for="(article, i) in articles">
                   <v-row
                     :key="i"
-                    align="center"
+                    class="article"
                   >
-                    <v-col cols="1">
-                      <v-list-item-action>
-                        <v-checkbox
-                          v-model="task.value"
-                          color="secondary"
-                        />
-                      </v-list-item-action>
-                    </v-col>
-
-                    <v-col cols="9">
-                      <div
-                        class="font-weight-light"
-                        v-text="task.text"
-                      />
-                    </v-col>
-
-                    <v-col
-                      cols="2"
-                      class="text-right"
-                    >
-                      <v-icon class="mx-1">
-                        mdi-pencil
-                      </v-icon>
-                      <v-icon
-                        color="error"
-                        class="mx-1"
+                    <div class="article__name">
+                      <a
+                        class="article__link"
+                        :href="article.url"
+                        target="_blank"
                       >
-                        mdi-close
-                      </v-icon>
-                    </v-col>
+                        {{ article.name }}
+                      </a>
+                    </div>
+                    <div class="article__description">
+                      {{ article.description }}
+                    </div>
                   </v-row>
                 </template>
+                <div class="text-center news-tab-pager">
+                  <v-pagination
+                    v-model="page"
+                    :length="articlePageCount"
+                    circle
+                  />
+                </div>
               </v-card-text>
             </v-tab-item>
           </v-tabs-items>
@@ -477,6 +470,11 @@
   import weatherApi from '../../api/WeatherApi'
   import marketDataApi from '../../api/MarketDataApi'
   import newsApi from '../../api/NewsApi'
+
+  const healthTab = 0
+  const politicsTab = 1
+  const technologyTab = 2
+  const topics = ['Health', 'Politics', 'Technology']
 
   export default {
     name: 'DashboardDashboard',
@@ -596,71 +594,56 @@
             value: 'name',
           },
         ],
-        newsItems: [
+        trendingTopics: [
         ],
-        tabs: 0,
-        tasks: {
-          0: [
-            {
-              text: 'Sign contract for "What are conference organizers afraid of?"',
-              value: true,
-            },
-            {
-              text: 'Lines From Great Russian Literature? Or E-mails From My Boss?',
-              value: false,
-            },
-            {
-              text: 'Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit',
-              value: false,
-            },
-            {
-              text: 'Create 4 Invisible User Experiences you Never Knew About',
-              value: true,
-            },
+        tabs: healthTab,
+        news: {
+          [healthTab]: [
           ],
-          1: [
-            {
-              text: 'Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit',
-              value: true,
-            },
-            {
-              text: 'Sign contract for "What are conference organizers afraid of?"',
-              value: false,
-            },
+          [politicsTab]: [
           ],
-          2: [
-            {
-              text: 'Lines From Great Russian Literature? Or E-mails From My Boss?',
-              value: false,
-            },
-            {
-              text: 'Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroit',
-              value: true,
-            },
-            {
-              text: 'Sign contract for "What are conference organizers afraid of?"',
-              value: true,
-            },
+          [technologyTab]: [
           ],
         },
-        list: {
-          0: false,
-          1: false,
-          2: false,
-        },
+        page: 1,
+        pageSize: 4,
       }
     },
 
     computed: {
+      articles () {
+        const items = this.news[this.tabs]
+        const page = this.page - 1
+        const start = page * this.pageSize
+        const end = Math.min(items.length, start + this.pageSize)
+        console.log(page, items.length, start, end)
+        return items.slice(start, end)
+      },
+
+      articlePageCount () {
+        return Math.ceil(this.news[this.tabs].length / this.pageSize)
+      },
     },
 
-    async mounted () {
-      // TODO run API queries concurrently
-      this.weather = await weatherApi.getWeatherData()
-      this.equityQuotes = await marketDataApi.getStockQuotes(['^DJI', '^SPX'])
-      this.forexQuotes['EUR-USD'] = await marketDataApi.getForexQuote('EUR', 'USD')
-      this.forexQuotes['BTC-USD'] = await marketDataApi.getForexQuote('BTC', 'USD')
-      this.newsItems = await newsApi.getTrendingTopics()
+    mounted () {
+      const component = this
+
+      weatherApi.getWeatherData()
+        .then(function (data) { component.weather = data })
+
+      marketDataApi.getStockQuotes(['^DJI', '^SPX'])
+        .then(function (data) { component.equityQuotes = data })
+
+      marketDataApi.getForexQuote('EUR', 'USD')
+        .then(function (data) { component.forexQuotes['EUR-USD'] = data })
+
+      marketDataApi.getForexQuote('BTC', 'USD')
+        .then(function (data) { component.forexQuotes['BTC-USD'] = data })
+
+      newsApi.getTrendingTopics()
+        .then(function (data) { component.trendingTopics = data })
+
+      this.getNews()
     },
 
     methods: {
@@ -669,7 +652,7 @@
       },
 
       updatedWhen (when) {
-        return 'Updated at ' + moment(when).format('YYYY-MM-DD hh:mm:ss A')
+        return moment(when).format('YYYY-MM-DD hh:mm:ss A')
       },
 
       equityQuote (symbol) {
@@ -683,6 +666,15 @@
       toFixed (value, precision) {
         return value ? value.toFixed(precision) : value
       },
+
+      getNews () {
+        this.page = 1
+        const component = this
+        const selectedTab = component.tabs
+        const selectedTopic = topics[component.tabs]
+        newsApi.getRecentNews(selectedTopic)
+          .then(function (data) { component.news[selectedTab] = data })
+      },
     },
   }
 </script>
@@ -690,5 +682,25 @@
 <style scoped>
 .news-image {
   width: 48px;
+}
+
+.article__name {
+  font-weight: bold;
+}
+
+.article__description {
+  margin-left: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: .9rem;
+}
+
+.article__link {
+  color: primary;
+  text-decoration: none;
+}
+
+.news-tab-pager {
+  margin-top: 1rem;
 }
 </style>
