@@ -108,10 +108,10 @@
           color="success"
           icon="mdi-currency-eur"
           title="EUR/USD"
-          :value="'$' + toFixed(parseFloat(forexQuote('EUR-USD').data['5. Exchange Rate']), 4)"
+          :value="'$' + toFixed(parseFloat(forexQuote('EUR-USD')['5. Exchange Rate']), 4)"
           small-value=""
           sub-icon="mdi-clock"
-          :sub-text="'Updated at ' + forexQuote('EUR-USD').data['6. Last Refreshed'] + ' UTC'"
+          :sub-text="'Updated at ' + forexQuote('EUR-USD')['6. Last Refreshed'] + ' UTC'"
         />
       </v-col>
 
@@ -124,10 +124,10 @@
           color="orange"
           icon="mdi-currency-btc"
           title="Bitcoin"
-          :value="'$' + toFixed(parseFloat(forexQuote('BTC-USD').data['5. Exchange Rate']), 0)"
+          :value="'$' + toFixed(parseFloat(forexQuote('BTC-USD')['5. Exchange Rate']), 0)"
           small-value=""
           sub-icon="mdi-clock"
-          :sub-text="'Updated at ' + forexQuote('BTC-USD').data['6. Last Refreshed'] + ' UTC'"
+          :sub-text="'Updated at ' + forexQuote('BTC-USD')['6. Last Refreshed'] + ' UTC'"
         />
       </v-col>
     </v-row>
@@ -505,8 +505,8 @@
         equityQuotes: {
         },
         forexQuotes: {
-          'EUR-USD': { data: {} },
-          'BTC-USD': { data: {} },
+          'EUR-USD': { },
+          'BTC-USD': { },
         },
         dailySalesChart: {
           data: {
@@ -639,6 +639,9 @@
 
       marketDataApi.getForexQuote('BTC', 'USD')
         .then(function (data) { component.forexQuotes['BTC-USD'] = data })
+
+      marketDataApi.getHistoricalQuotes('^SPX', '1d', '10d')
+        .then(function (data) { component.sp500History = data })
 
       newsApi.getTrendingTopics()
         .then(function (data) { component.trendingTopics = data })
