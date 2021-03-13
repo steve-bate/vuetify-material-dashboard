@@ -79,6 +79,8 @@
 </template>
 
 <script>
+  import config from '../../../../../public/config'
+
   // Utilities
   import {
     mapState,
@@ -140,7 +142,7 @@
       profile () {
         return {
           avatar: true,
-          title: this.$t('avatar'),
+          title: config.title || this.$t('avatar'),
         }
       },
     },
