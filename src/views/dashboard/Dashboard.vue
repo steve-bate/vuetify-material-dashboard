@@ -138,12 +138,12 @@
         lg="4"
       >
         <base-material-chart-card
-          :data="emailsSubscriptionChart.data"
-          :options="emailsSubscriptionChart.options"
-          :responsive-options="emailsSubscriptionChart.responsiveOptions"
+          :data="sp500Chart.data"
+          :options="sp500Chart.options"
+          :responsive-options="sp500Chart.responsiveOptions"
           color="#E91E63"
           hover-reveal
-          type="Bar"
+          type="Line"
         >
           <template #reveal-actions>
             <v-tooltip bottom>
@@ -182,11 +182,11 @@
           </template>
 
           <h4 class="card-title font-weight-light mt-2 ml-2">
-            Website Views
+            S&amp;P 500
           </h4>
 
           <p class="d-inline-flex font-weight-light ml-2 mt-1">
-            Last Campaign Performance
+            2 week prices
           </p>
 
           <template #actions>
@@ -206,8 +206,8 @@
         lg="4"
       >
         <base-material-chart-card
-          :data="dailySalesChart.data"
-          :options="dailySalesChart.options"
+          :data="euroChart.data"
+          :options="euroChart.options"
           color="success"
           hover-reveal
           type="Line"
@@ -249,7 +249,7 @@
           </template>
 
           <h4 class="card-title font-weight-light mt-2 ml-2">
-            Daily Sales
+            Euro Exchange Rates
           </h4>
 
           <p class="d-inline-flex font-weight-light ml-2 mt-1">
@@ -260,7 +260,7 @@
               mdi-arrow-up
             </v-icon>
             <span class="green--text">55%</span>&nbsp;
-            increase in today's sales
+            2 week rates
           </p>
 
           <template #actions>
@@ -280,8 +280,8 @@
         lg="4"
       >
         <base-material-chart-card
-          :data="dataCompletedTasksChart.data"
-          :options="dataCompletedTasksChart.options"
+          :data="btcChart.data"
+          :options="btcChart.options"
           hover-reveal
           color="info"
           type="Line"
@@ -323,11 +323,11 @@
           </template>
 
           <h3 class="card-title font-weight-light mt-2 ml-2">
-            Completed Tasks
+            Bitcount (BTC-USD)
           </h3>
 
           <p class="d-inline-flex font-weight-light ml-2 mt-1">
-            Last Last Campaign Performance
+            2 week prices
           </p>
 
           <template #actions>
@@ -418,6 +418,24 @@
                 </v-icon>
                 Technology
               </v-tab>
+              <v-tab>
+                <v-icon class="mr-2">
+                  mdi-laptop
+                </v-icon>
+                Business
+              </v-tab>
+              <v-tab>
+                <v-icon class="mr-2">
+                  mdi-laptop
+                </v-icon>
+                US Northeast
+              </v-tab>
+              <v-tab>
+                <v-icon class="mr-2">
+                  mdi-laptop
+                </v-icon>
+                Europe
+              </v-tab>
             </v-tabs>
           </template>
 
@@ -426,7 +444,7 @@
             class="transparent"
           >
             <v-tab-item
-              v-for="n in 3"
+              v-for="n in 6"
               :key="n"
             >
               <v-card-text>
@@ -474,7 +492,18 @@
   const healthTab = 0
   const politicsTab = 1
   const technologyTab = 2
-  const topics = ['Health', 'Politics', 'Technology']
+  const businessTab = 3
+  const northeastTab = 4
+  const europeTab = 5
+
+  const topics = [
+    'Health',
+    'Politics',
+    'Technology',
+    'Business',
+    'US_Northeast',
+    'World_Europe',
+  ]
 
   export default {
     name: 'DashboardDashboard',
@@ -508,7 +537,7 @@
           'EUR-USD': { },
           'BTC-USD': { },
         },
-        dailySalesChart: {
+        euroChart: {
           data: {
             labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
             series: [
@@ -529,7 +558,7 @@
             },
           },
         },
-        dataCompletedTasksChart: {
+        btcChart: {
           data: {
             labels: ['12am', '3pm', '6pm', '9pm', '12pm', '3am', '6am', '9am'],
             series: [
@@ -550,7 +579,7 @@
             },
           },
         },
-        emailsSubscriptionChart: {
+        sp500Chart: {
           data: {
             labels: ['Ja', 'Fe', 'Ma', 'Ap', 'Mai', 'Ju', 'Jul', 'Au', 'Se', 'Oc', 'No', 'De'],
             series: [
@@ -562,8 +591,8 @@
             axisX: {
               showGrid: false,
             },
-            low: 0,
-            high: 1000,
+            low: 3000,
+            high: 4000,
             chartPadding: {
               top: 0,
               right: 5,
@@ -604,6 +633,12 @@
           ],
           [technologyTab]: [
           ],
+          [businessTab]: [
+          ],
+          [northeastTab]: [
+          ],
+          [europeTab]: [
+          ],
         },
         page: 1,
         pageSize: 4,
@@ -616,7 +651,6 @@
         const page = this.page - 1
         const start = page * this.pageSize
         const end = Math.min(items.length, start + this.pageSize)
-        console.log(page, items.length, start, end)
         return items.slice(start, end)
       },
 
@@ -640,8 +674,20 @@
       marketDataApi.getForexQuote('BTC', 'USD')
         .then(function (data) { component.forexQuotes['BTC-USD'] = data })
 
-      marketDataApi.getHistoricalQuotes('^SPX', '1d', '10d')
-        .then(function (data) { component.sp500History = data })
+      marketDataApi.getHistoricalQuotes('^GSPC', '1d', '10d')
+        .then(function (data) {
+          component.setChartData(component.sp500Chart, data)
+        })
+
+      marketDataApi.getHistoricalQuotes('EURUSD=X', '1d', '10d')
+        .then(function (data) {
+          component.setChartData(component.euroChart, data)
+        })
+
+      marketDataApi.getHistoricalQuotes('BTC-USD', '1d', '10d')
+        .then(function (data) {
+          component.setChartData(component.btcChart, data)
+        })
 
       newsApi.getTrendingTopics()
         .then(function (data) { component.trendingTopics = data })
@@ -650,6 +696,19 @@
     },
 
     methods: {
+      setChartData (chart, data) {
+        const labels = []
+        for (const ts of data.timestamp) {
+          const d = new Date(ts * 1000)
+          labels.push(moment(d).format('MM/DD'))
+        }
+        chart.data.labels = labels
+        const series = data.indicators.adjclose[0].adjclose
+        chart.data.series = [series]
+        chart.options.low = Math.min(...series)
+        chart.options.high = Math.max(...series)
+      },
+
       complete (index) {
         this.list[index] = !this.list[index]
       },

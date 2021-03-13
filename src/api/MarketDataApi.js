@@ -7,12 +7,12 @@ export default {
     const url = `https://api.mirabeau-tech.com/yahoo/v8/finance/chart/${symbol}?interval=${interval}&range=${range}`
     const cachedPayload = cache.get(url)
     if (cachedPayload) {
-      return cachedPayload.chart.result
+      return cachedPayload.chart.result[0]
     }
     const response = await fetch(url)
     const payload = await response.json()
     cache.set(url, payload, 3600000 * 4)
-    return payload.chart.result
+    return payload.chart.result[0]
   },
 
   async getStockQuotes (symbols) {
