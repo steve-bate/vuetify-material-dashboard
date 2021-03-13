@@ -4,7 +4,7 @@ import cache from './Cache'
 export default {
 
   async getHistoricalQuotes (symbol, interval, range) {
-    const url = `https://api.mirabeau-tech.com/yahoo/v8/finance/chart/${symbol}?interval=${interval}&range=${range}`
+    const url = `https://${config.api.yahooFinance.endpoint}/v8/finance/chart/${symbol}?interval=${interval}&range=${range}`
     const cachedPayload = cache.get(url)
     if (cachedPayload) {
       return cachedPayload.chart.result[0]
@@ -16,7 +16,7 @@ export default {
   },
 
   async getStockQuotes (symbols) {
-    const url = `https://api.mirabeau-tech.com/yahoo/v7/finance/quote?symbols=${symbols.join()}`
+    const url = `https://${config.api.yahooFinance.endpoint}/v7/finance/quote?symbols=${symbols.join()}`
     const response = await fetch(url)
     const payload = await response.json()
     const result = {}
