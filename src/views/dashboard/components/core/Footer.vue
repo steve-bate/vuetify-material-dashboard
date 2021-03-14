@@ -29,7 +29,7 @@
           md="auto"
         >
           <div class="text-body-1 font-weight-light pt-6 pt-md-0 text-center">
-            PLACEHOLDER
+            <span v-html="footerText" />
           </div>
         </v-col>
       </v-row>
@@ -53,6 +53,12 @@
         },
       ],
     }),
+
+    computed: {
+      footerText () {
+        return this.$store.state.config.app.footer
+      },
+    },
   }
 </script>
 

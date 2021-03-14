@@ -7,14 +7,15 @@ export default {
 
   mutations: {
     CONFIG (state, config) {
-      state.config = config
+      for (const [key, value] of Object.entries(config)) {
+        state[key] = value
+      }
     },
   },
 
   actions: {
     async load ({ commit }) {
       const response = await fetch('/config.json')
-      console.log('commit config')
       commit('CONFIG', await response.json())
     },
   },

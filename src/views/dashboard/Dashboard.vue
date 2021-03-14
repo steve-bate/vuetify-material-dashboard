@@ -35,7 +35,7 @@
         />
       </v-col>
 
-      <v-col
+      <!-- <v-col
         cols="12"
         sm="6"
         lg="3"
@@ -49,7 +49,7 @@
           sub-icon="mdi-clock"
           :sub-text="updatedWhen(new Date(weather.dt * 1000))"
         />
-      </v-col>
+      </v-col> -->
 
       <v-col
         cols="12"
@@ -64,6 +64,21 @@
           small-value="mph"
           sub-icon="mdi-clock"
           :sub-text="updatedWhen(new Date(weather.dt * 1000))"
+        />
+      </v-col>
+
+      <v-col
+        cols="12"
+        sm="6"
+        lg="3"
+      >
+        <base-material-stats-card
+          color="purple"
+          icon="mdi-weather-windy-variant"
+          title="Ozone"
+          :value="`${ozone.Category.Name} (${ozone.AQI})`"
+          sub-icon="mdi-clock"
+          :sub-text="'TBD'"
         />
       </v-col>
     </v-row>
@@ -364,7 +379,7 @@
           <v-card-text>
             <v-data-table
               hide-default-header
-              :headers="headers"
+              :headers="trandingTopicsHeaders"
               :items="trendingTopics"
             >
               <template #item.image="{ item }">
@@ -420,19 +435,19 @@
               </v-tab>
               <v-tab>
                 <v-icon class="mr-2">
-                  mdi-laptop
+                  mdi-package-variant
                 </v-icon>
                 Business
               </v-tab>
               <v-tab>
                 <v-icon class="mr-2">
-                  mdi-laptop
+                  mdi-newspaper
                 </v-icon>
                 US Northeast
               </v-tab>
               <v-tab>
                 <v-icon class="mr-2">
-                  mdi-laptop
+                  mdi-currency-eur
                 </v-icon>
                 Europe
               </v-tab>
@@ -488,6 +503,7 @@
   import weatherApi from '../../api/WeatherApi'
   import marketDataApi from '../../api/MarketDataApi'
   import newsApi from '../../api/NewsApi'
+  import airNowApi from '../../api/AirNowApi'
 
   const healthTab = 0
   const politicsTab = 1
@@ -510,7 +526,6 @@
 
     data () {
       return {
-        // TODO Connect to weather API
         weather: {
           coord: {
           },
@@ -528,7 +543,7 @@
           },
           timezone: -18000,
           id: 0,
-          name: 'Bala Cynwyd',
+          name: '?',
           cod: 200,
         },
         equityQuotes: {
@@ -539,17 +554,15 @@
         },
         euroChart: {
           data: {
-            labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
-            series: [
-              [12, 17, 7, 17, 23, 18, 38],
-            ],
+            labels: [],
+            series: [[]],
           },
           options: {
             lineSmooth: this.$chartist.Interpolation.cardinal({
               tension: 0,
             }),
             low: 0,
-            high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+            high: 50,
             chartPadding: {
               top: 0,
               right: 0,
@@ -560,17 +573,15 @@
         },
         btcChart: {
           data: {
-            labels: ['12am', '3pm', '6pm', '9pm', '12pm', '3am', '6am', '9am'],
-            series: [
-              [230, 750, 450, 300, 280, 240, 200, 190],
-            ],
+            labels: [],
+            series: [[]],
           },
           options: {
             lineSmooth: this.$chartist.Interpolation.cardinal({
               tension: 0,
             }),
             low: 0,
-            high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+            high: 1000,
             chartPadding: {
               top: 0,
               right: 0,
@@ -581,11 +592,8 @@
         },
         sp500Chart: {
           data: {
-            labels: ['Ja', 'Fe', 'Ma', 'Ap', 'Mai', 'Ju', 'Jul', 'Au', 'Se', 'Oc', 'No', 'De'],
-            series: [
-              [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895],
-
-            ],
+            labels: [],
+            series: [[]],
           },
           options: {
             axisX: {
@@ -611,7 +619,7 @@
             }],
           ],
         },
-        headers: [
+        trandingTopicsHeaders: [
           {
             sortable: false,
             text: 'Image',
@@ -642,6 +650,7 @@
         },
         page: 1,
         pageSize: 4,
+        airQuality: [],
       }
     },
 
@@ -656,6 +665,10 @@
 
       articlePageCount () {
         return Math.ceil(this.news[this.tabs].length / this.pageSize)
+      },
+
+      ozone () {
+        return this.airQuality.find(a => a.ParameterName === 'O3') || { Category: {} }
       },
     },
 
@@ -687,6 +700,11 @@
       marketDataApi.getHistoricalQuotes('BTC-USD', '1d', '10d')
         .then(function (data) {
           component.setChartData(component.btcChart, data)
+        })
+
+      airNowApi.getAirQuality()
+        .then(function (data) {
+          component.airQuality = data
         })
 
       newsApi.getTrendingTopics()

@@ -37,5 +37,8 @@
   "user": "User Profile",
   "vforms": "Validation Forms",
   "widgets": "Widgets",
-  "wizard": "Wizard"
+  "wizard": "Wizard",
+  "markets": "Markets",
+  "weather": "Weather",
+  "covid": "COVID"
 }

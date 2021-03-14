@@ -31,8 +31,7 @@
           contain
         >
           <v-img
-            src="https://demos.creative-tim.com/vuetify-material-dashboard/favicon.ico"
-            max-height="30"
+            :src="$store.state.config.app.avatar"
           />
         </v-list-item-avatar>
 
@@ -104,24 +103,29 @@
           to: '/',
         },
         {
-          icon: 'mdi-account',
-          title: 'user',
-          to: '/pages/user',
+          icon: 'mdi-chart-line',
+          title: 'markets',
+          to: '/pages/markets',
         },
         {
-          icon: 'mdi-clock',
-          title: 'timeline',
-          to: '/pages/timeline',
+          icon: 'mdi-weather-windy-variant',
+          title: 'weather',
+          to: '/pages/weather',
         },
         {
-          title: 'rtables',
-          icon: 'mdi-clipboard-outline',
-          to: '/tables/regular-tables',
+          icon: 'mdi-needle',
+          title: 'covid',
+          to: '/pages/covid',
         },
         {
           title: 'google',
           icon: 'mdi-map-marker',
           to: '/maps/google-maps',
+        },
+        {
+          title: 'user',
+          icon: 'mdi-account',
+          to: '/pages/user',
         },
       ],
     }),
@@ -142,7 +146,7 @@
       profile () {
         return {
           avatar: true,
-          title: config.title || this.$t('avatar'),
+          title: config.app.title || this.$t('avatar'),
         }
       },
     },

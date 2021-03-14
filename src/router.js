@@ -32,15 +32,19 @@ export default new Router({
           component: () => import('@/views/dashboard/pages/UserProfile'),
         },
         {
-          name: 'Timeline',
-          path: 'pages/timeline',
-          component: () => import('@/views/dashboard/pages/Timeline'),
+          name: 'Markets',
+          path: 'pages/markets',
+          component: () => import('@/views/dashboard/pages/Markets'),
         },
-        // Tables
         {
-          name: 'Regular Tables',
-          path: 'tables/regular-tables',
-          component: () => import('@/views/dashboard/tables/RegularTables'),
+          name: 'Weather',
+          path: 'pages/weather',
+          component: () => import('@/views/dashboard/pages/Weather'),
+        },
+        {
+          name: 'COVID',
+          path: 'pages/covid',
+          component: () => import('@/views/dashboard/pages/Covid'),
         },
         // Maps
         {
