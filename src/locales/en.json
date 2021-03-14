@@ -40,5 +40,6 @@
   "wizard": "Wizard",
   "markets": "Markets",
   "weather": "Weather",
-  "covid": "COVID"
+  "covid": "COVID",
+  "news": "News"
 }

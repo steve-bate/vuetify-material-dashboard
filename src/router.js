@@ -46,6 +46,11 @@ export default new Router({
           path: 'pages/covid',
           component: () => import('@/views/dashboard/pages/Covid'),
         },
+        {
+          name: 'News',
+          path: 'pages/news',
+          component: () => import('@/views/dashboard/pages/News'),
+        },
         // Maps
         {
           name: 'Google Maps',

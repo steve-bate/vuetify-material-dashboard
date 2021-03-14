@@ -108,6 +108,11 @@
           to: '/pages/markets',
         },
         {
+          icon: 'mdi-newspaper-variant-outline',
+          title: 'news',
+          to: '/pages/news',
+        },
+        {
           icon: 'mdi-weather-windy-variant',
           title: 'weather',
           to: '/pages/weather',
@@ -118,14 +123,14 @@
           to: '/pages/covid',
         },
         {
-          title: 'google',
-          icon: 'mdi-map-marker',
-          to: '/maps/google-maps',
-        },
-        {
           title: 'user',
           icon: 'mdi-account',
           to: '/pages/user',
+        },
+        {
+          title: 'google',
+          icon: 'mdi-map-marker',
+          to: '/maps/google-maps',
         },
       ],
     }),

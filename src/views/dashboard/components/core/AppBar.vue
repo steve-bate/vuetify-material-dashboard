@@ -30,7 +30,7 @@
 
     <v-spacer />
 
-    <v-text-field
+    <!-- <v-text-field
       :label="$t('search')"
       color="secondary"
       hide-details
@@ -51,7 +51,7 @@
       </template>
     </v-text-field>
 
-    <div class="mx-3" />
+    <div class="mx-3" /> -->
 
     <v-btn
       class="ml-2"

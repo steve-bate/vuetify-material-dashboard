@@ -155,7 +155,7 @@
         <base-material-chart-card
           :data="sp500Chart.data"
           :options="sp500Chart.options"
-          :responsive-options="sp500Chart.responsiveOptions"
+          :responsive-options="chartResponsiveOptions"
           color="#E91E63"
           hover-reveal
           type="Line"
@@ -223,6 +223,7 @@
         <base-material-chart-card
           :data="euroChart.data"
           :options="euroChart.options"
+          :responsive-options="chartResponsiveOptions"
           color="success"
           hover-reveal
           type="Line"
@@ -297,6 +298,7 @@
         <base-material-chart-card
           :data="btcChart.data"
           :options="btcChart.options"
+          :responsive-options="chartResponsiveOptions"
           hover-reveal
           color="info"
           type="Line"
@@ -382,12 +384,14 @@
               :headers="trandingTopicsHeaders"
               :items="trendingTopics"
             >
+              <!-- eslint-disable-next-line vue/valid-v-slot -->
               <template #item.image="{ item }">
                 <img
                   class="news-image"
                   :src="item.image.url"
                 >
               </template>
+              <!-- eslint-disable-next-line vue/valid-v-slot -->
               <template #item.name="{ item }">
                 <a
                   :href="item.newsSearchUrl"
@@ -608,16 +612,6 @@
               left: 0,
             },
           },
-          responsiveOptions: [
-            ['screen and (max-width: 640px)', {
-              seriesBarDistance: 5,
-              axisX: {
-                labelInterpolationFnc: function (value) {
-                  return value[0]
-                },
-              },
-            }],
-          ],
         },
         trandingTopicsHeaders: [
           {
@@ -655,6 +649,33 @@
     },
 
     computed: {
+      chartResponsiveOptions () {
+        return [
+          ['screen and (max-width: 500px)', {
+            axisX: {
+              labelInterpolationFnc: function (value) {
+                return parseInt(value.substring(value.indexOf('/') + 1))
+              },
+            },
+          }],
+          ['screen and (min-width: 501px) and (max-width: 1264px)', {
+            axisX: {
+              labelInterpolationFnc: function (value) {
+                return value // parseInt(value.substring(value.indexOf('/') + 1))
+              },
+            },
+          }],
+          ['screen and (min-width: 1265px) and (max-width: 1700px)', {
+            axisX: {
+              labelInterpolationFnc: function (value) {
+                const day = parseInt(value.substring(value.indexOf('/') + 1))
+                return day % 2 === 0 ? '' : value
+              },
+            },
+          }],
+        ]
+      },
+
       articles () {
         const items = this.news[this.tabs]
         const page = this.page - 1
@@ -718,7 +739,7 @@
         const labels = []
         for (const ts of data.timestamp) {
           const d = new Date(ts * 1000)
-          labels.push(moment(d).format('MM/DD'))
+          labels.push(moment(d).format('M/D'))
         }
         chart.data.labels = labels
         const series = data.indicators.adjclose[0].adjclose
@@ -771,7 +792,7 @@
 .article__description {
   margin-left: 1rem;
   margin-top: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   font-size: .9rem;
 }
 
