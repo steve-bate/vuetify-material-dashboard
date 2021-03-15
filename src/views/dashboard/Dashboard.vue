@@ -340,7 +340,7 @@
           </template>
 
           <h3 class="card-title font-weight-light mt-2 ml-2">
-            Bitcount (BTC-USD)
+            Bitcoin (BTC-USD)
           </h3>
 
           <p class="d-inline-flex font-weight-light ml-2 mt-1">

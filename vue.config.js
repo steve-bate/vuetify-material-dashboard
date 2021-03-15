@@ -13,4 +13,6 @@ module.exports = {
       enableInSFC: false,
     },
   },
+
+  publicPath: process.env.NODE_ENV === 'production' ? '/dashboard' : '',
 }
