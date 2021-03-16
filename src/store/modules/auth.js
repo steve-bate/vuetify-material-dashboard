@@ -1,4 +1,4 @@
-import authApi from '../../../api/AuthenticationApi'
+import authApi from '../../api/AuthenticationApi'
 
 export default {
   namespaced: true,
